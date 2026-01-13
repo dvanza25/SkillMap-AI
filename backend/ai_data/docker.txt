@@ -1,0 +1,4 @@
+Docker is a containerization platform.
+It allows packaging applications with dependencies.
+Docker uses images and containers.
+Docker Compose manages multi-container applications.

@@ -1,0 +1,4 @@
+
+Django is a Python web framework.
+Django REST Framework is used to build APIs.
+JWT authentication is commonly used with DRF.

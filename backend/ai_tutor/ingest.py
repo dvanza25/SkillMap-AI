@@ -22,6 +22,7 @@ def ingest():
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
     chunks = splitter.split_documents(documents)
 
+    # Using OpenAI embeddings as they are more reliable and cost-effective
     embeddings = OpenAIEmbeddings()
 
     PGVector.from_documents(

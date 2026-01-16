@@ -1,19 +1,18 @@
-import ReactFlow from "reactflow";
+import ReactFlow, { Background, Controls } from "reactflow";
 import "reactflow/dist/style.css";
 
-export function RoadmapGraph({ nodes, onNodeClick }) {
+export default function RoadmapGraph({ nodes, edges, onNodeClick }) {
   return (
-    <div className="h-[500px] border rounded">
+    <div className="h-[500px] border rounded bg-white">
       <ReactFlow
         nodes={nodes}
-        edges={nodes.slice(1).map((n, i) => ({
-          id: `e${i}`,
-          source: nodes[i].id,
-          target: n.id,
-        }))}
+        edges={edges}
         onNodeClick={(_, node) => onNodeClick(node)}
         fitView
-      />
+      >
+        <Background />
+        <Controls />
+      </ReactFlow>
     </div>
   );
 }

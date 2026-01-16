@@ -1,7 +1,10 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from roadmap.models import RoadmapNode, UserNodeProgress
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
+
+from roadmap.models import RoadmapNode
+from .models import UserNodeProgress
 
 
 class CompleteNodeView(APIView):
@@ -10,37 +13,40 @@ class CompleteNodeView(APIView):
     def post(self, request):
         node_id = request.data.get("node_id")
 
-        try:
-            node = RoadmapNode.objects.get(node_id=node_id)
-        except RoadmapNode.DoesNotExist:
-            return Response({"error": "Node not found"}, status=404)
+        if not node_id:
+            return Response(
+                {"error": "node_id is required"},
+                status=400,
+            )
+
+        node = get_object_or_404(RoadmapNode, id=node_id)
 
         progress, created = UserNodeProgress.objects.get_or_create(
             user=request.user,
             node=node,
         )
 
-        # Toggle completion status
         if progress.completed:
-            progress.completed = False
-            message = "Node uncompleted"
-        else:
-            progress.completed = True
-            message = "Node completed"
+            return Response(
+                {"message": "Node already completed"},
+                status=200,
+            )
 
+        progress.completed = True
+        progress.earned_xp = node.xp
         progress.save()
+
+        total_xp = (
+            UserNodeProgress.objects
+            .filter(user=request.user, completed=True)
+            .aggregate(models.Sum("earned_xp"))["earned_xp__sum"] or 0
+        )
 
         return Response(
             {
-                "message": message,
-                "completed": progress.completed,
-                "earned_xp": node.xp if progress.completed else 0,
-                "total_xp": self._total_xp(request.user),
+                "message": "Node completed",
+                "node": node.label,
+                "earned_xp": node.xp,
+                "total_xp": total_xp,
             }
-        )
-
-    def _total_xp(self, user):
-        return sum(
-            p.node.xp
-            for p in UserNodeProgress.objects.filter(user=user, completed=True)
         )

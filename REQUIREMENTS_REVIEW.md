@@ -24,7 +24,7 @@
 **Status**: ✅ IMPLEMENTED & INTEGRATED
 
 - [x] RAG (Retrieval Augmented Generation) backend setup
-- [x] LangChain integration with OpenAI
+- [x] LangChain integration with Google Gemini API
 - [x] PGVector for vector storage
 - [x] Data ingestion from .txt files (django.txt, docker.txt)
 - [x] AI Chat API endpoint (`/api/ai/chat/`)
@@ -39,7 +39,7 @@
 - [x] **Backend**: Django REST Framework + Python
 - [x] **Frontend**: React.js with Vite + React Hooks
 - [x] **Visualization**: React Flow for roadmap graph
-- [x] **AI/LLM**: LangChain + OpenAI (requires API key)
+- [x] **AI/LLM**: LangChain + Google Gemini API (requires API key)
 - [x] **Vector DB**: PGVector (PostgreSQL extension)
 - [x] **DevOps**: Docker + Docker Compose with hot-reload
 
@@ -103,9 +103,9 @@
 ## 🚀 **Ready for Production Features**
 
 ### To Enable AI Chat (Complete Setup):
-1. Add OpenAI API Key to `.env`:
+1. Add Gemini API Key to `.env`:
    ```
-   OPENAI_API_KEY=sk-your-key-here
+   GEMINI_API_KEY=your-gemini-api-key-here
    ```
 
 2. Run data ingestion from container:
@@ -143,7 +143,7 @@
 
 ## 📝 **Next Steps (Optional Enhancements)**
 
-1. **OpenAI Integration**: Add API key to enable full AI functionality
+1. **Gemini API Integration**: Add API key to enable full AI functionality
 2. **Conversation Memory**: Persist chat history to database
 3. **Topic-Specific Tutoring**: Link courses to specific knowledge bases
 4. **Analytics Dashboard**: Track user progress over time

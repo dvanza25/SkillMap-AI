@@ -9,6 +9,7 @@ class RoadmapNodeSerializer(serializers.ModelSerializer):
             "node_id",
             "label",
             "xp",
+            "completed",      # ✅ NEW
             "position_x",
             "position_y",
         ]

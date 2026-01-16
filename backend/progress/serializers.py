@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import UserProgress
+from .models import UserNodeProgress
 
-
-class UserProgressSerializer(serializers.ModelSerializer):
+class UserNodeProgressSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserProgress
+        model = UserNodeProgress
         fields = "__all__"
+        read_only_fields = ("user", "earned_xp")
 
 class CompleteNodeSerializer(serializers.Serializer):
     node_id = serializers.CharField()

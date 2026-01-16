@@ -27,7 +27,7 @@ export function AiChat() {
       } else if (err.response?.status === 500) {
         const errorType = err.response?.data?.type;
         if (errorType === "missing_api_key") {
-          errorText = "⚠️ OpenAI API key not configured. Please add OPENAI_API_KEY to your environment variables.";
+          errorText = "⚠️ Gemini API key not configured. Please add GOOGLE_API_KEY to your environment variables.";
         } else if (errorType === "missing_knowledge_base") {
           errorText = "⚠️ Knowledge base not initialized. Please run the data ingestion script first.";
         } else if (errorType === "import_error") {

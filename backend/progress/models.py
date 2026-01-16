@@ -1,15 +1,26 @@
-from django.conf import settings
 from django.db import models
+from django.contrib.auth import get_user_model
 from roadmap.models import RoadmapNode
-from django.contrib.auth.models import User
 
-User = settings.AUTH_USER_MODEL
+User = get_user_model()
 
 
-class UserProgress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    node = models.ForeignKey(RoadmapNode, on_delete=models.CASCADE)
+class UserNodeProgress(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="node_progress"
+    )
+    node = models.ForeignKey(
+        RoadmapNode,
+        on_delete=models.CASCADE,
+        related_name="user_progress"
+    )
     completed = models.BooleanField(default=False)
+    completed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ("user", "node")
+
+    def __str__(self):
+        return f"{self.user} - {self.node}"

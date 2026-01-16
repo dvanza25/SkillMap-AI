@@ -23,6 +23,7 @@ services:
       - "8000:8000"
     environment:
       - DEBUG=True
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
 
   frontend:
     build:

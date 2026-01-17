@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Roadmap(models.Model):
@@ -38,3 +39,27 @@ class RoadmapEdge(models.Model):
     )
     source = models.CharField(max_length=50, default="")
     target = models.CharField(max_length=50, default="")
+
+class UserNodeProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    node = models.ForeignKey(RoadmapNode, on_delete=models.CASCADE)
+
+    completed = models.BooleanField(default=False)
+    earned_xp = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ("user", "node")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.node.label}"
+    
+class UserRoadmapProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    node = models.ForeignKey(RoadmapNode, on_delete=models.CASCADE)
+    completed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ("user", "node")
+
+    def __str__(self):
+        return f"{self.user.username} - {self.node.label}"

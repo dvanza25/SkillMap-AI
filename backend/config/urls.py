@@ -7,4 +7,5 @@ urlpatterns = [
     path("api/roadmap/", include("roadmap.urls")),
     path("api/progress/", include("progress.urls")),
     path("api/ai/", include("ai_tutor.urls")),
+    path("api/users/", include("users.urls")),
 ]

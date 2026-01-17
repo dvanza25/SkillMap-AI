@@ -58,71 +58,120 @@ export default function ChatPanel({ selectedNodeId }) {
   };
 
   return (
-    <div className="h-full flex flex-col p-4">
-      <h2 className="text-lg font-semibold mb-2">AI Tutor</h2>
+    <div className="h-full flex flex-col bg-gradient-to-b from-blue-50 to-indigo-50">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 shadow-lg">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-2xl">🤖</span>
+          <h2 className="text-xl font-bold">AI Tutor</h2>
+        </div>
+        <p className="text-blue-100 text-sm">Powered by Gemini AI</p>
+      </div>
 
-      {selectedNodeId && (
-        <div className="text-xs text-gray-500 mb-2">
-          Context: <span className="font-semibold">{selectedNodeId}</span>
+      {/* Context Indicator */}
+      {selectedNodeId ? (
+        <div className="bg-green-50 border-b border-green-200 px-6 py-3">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-lg">✓</span>
+            <div>
+              <p className="text-gray-600 text-xs font-medium">LEARNING CONTEXT</p>
+              <p className="text-green-700 font-semibold">{selectedNodeId}</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-amber-50 border-b border-amber-200 px-6 py-3">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-lg">💡</span>
+            <p className="text-amber-800">
+              <span className="font-semibold">Tip:</span> Select a roadmap node first to ask contextual questions
+            </p>
+          </div>
         </div>
       )}
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-3 mb-3">
-        {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`p-3 rounded ${msg.role === "user"
-              ? "bg-blue-100 text-right"
-              : "bg-gray-100"
-              }`}
-          >
-            <div>{msg.content}</div>
-
-            {/* Sources (safe rendering) */}
-            {msg.role === "assistant" && msg.sources.length > 0 && (
-              <div className="mt-2 text-xs text-gray-600">
-                <div className="font-semibold">Sources:</div>
-                <ul className="list-disc list-inside">
-                  {msg.sources.map((src, i) => (
-                    <li key={i}>{src}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        {messages.length === 0 ? (
+          <div className="h-full flex items-center justify-center text-center">
+            <div>
+              <span className="text-5xl block mb-3">👋</span>
+              <p className="text-gray-600 font-medium">Welcome to your AI Tutor!</p>
+              <p className="text-gray-500 text-sm mt-2">
+                Select a course and ask any questions to get personalized help
+              </p>
+            </div>
           </div>
-        ))}
+        ) : (
+          messages.map((msg, idx) => (
+            <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`max-w-xs lg:max-w-sm xl:max-w-md px-4 py-3 rounded-xl ${
+                  msg.role === "user"
+                    ? "bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-br-none shadow-md"
+                    : "bg-white text-gray-800 border border-gray-200 rounded-bl-none shadow-sm"
+                }`}
+              >
+                <div className="text-sm leading-relaxed">{msg.content}</div>
+
+                {/* Sources */}
+                {msg.role === "assistant" && msg.sources.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-gray-300">
+                    <p className="text-xs font-semibold text-gray-700 mb-2 flex items-center gap-1">
+                      <span>📚</span> Sources
+                    </p>
+                    <ul className="space-y-1">
+                      {msg.sources.map((src, i) => (
+                        <li
+                          key={i}
+                          className="text-xs text-gray-600 bg-gray-50 rounded px-2 py-1 border-l-2 border-blue-400"
+                        >
+                          {src}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))
+        )}
 
         {loading && (
-          <div className="text-sm text-gray-500">Thinking...</div>
+          <div className="flex justify-start">
+            <div className="bg-white text-gray-800 border border-gray-200 px-4 py-3 rounded-xl rounded-bl-none shadow-sm flex items-center gap-2">
+              <span className="text-lg animate-pulse">🤔</span>
+              <span className="text-sm text-gray-600">AI Tutor is thinking...</span>
+            </div>
+          </div>
         )}
       </div>
 
-      {!selectedNodeId && (
-        <div className="text-sm text-yellow-600 mb-2">
-          Select a roadmap node to ask contextual questions.
-        </div>
-      )}
-
-      {/* Input */}
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          className="flex-1 border rounded px-3 py-2"
-          placeholder="Ask about your roadmap..."
-        />
-        <button
-          onClick={sendMessage}
-          disabled={!selectedNodeId || loading}
-          className={`px-4 py-2 rounded text-white ${!selectedNodeId
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600"
+      {/* Input Area */}
+      <div className="border-t border-gray-200 bg-white p-6 shadow-xl">
+        <div className="flex gap-3">
+          <input
+            type="text"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+            className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50 hover:bg-white transition duration-200 text-sm placeholder-gray-400"
+            placeholder={selectedNodeId ? "Ask about this topic..." : "Select a course first..."}
+            disabled={!selectedNodeId}
+          />
+          <button
+            onClick={sendMessage}
+            disabled={!selectedNodeId || loading || !question.trim()}
+            className={`px-6 py-3 rounded-lg font-semibold transition duration-200 transform flex items-center gap-2 ${
+              !selectedNodeId || loading || !question.trim()
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 active:scale-95 shadow-md"
             }`}
-        >
-          Send
-        </button>
+          >
+            <span>Send</span>
+            <span>📤</span>
+          </button>
+        </div>
       </div>
     </div>
   );

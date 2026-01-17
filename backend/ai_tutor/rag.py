@@ -74,12 +74,15 @@ def generate_answer(question: str, node_id: str, roadmap_hint: str):
     context = "\n".join(doc.page_content for doc in docs) or "No context found."
 
     prompt = f"""
-You are an AI Tutor.
+You are an AI Tutor for a structured learning roadmap.
 
 STRICT RULES:
-- You MUST follow the roadmap order.
-- You MUST NOT suggest topics outside the roadmap.
-- If no next topic exists, say so clearly.
+- Be concise and high-level.
+- Use short bullet points only.
+- Do NOT explain basics like Hello World, syntax examples, or operators.
+- Do NOT teach — only summarize learning topics.
+- Stay strictly within the roadmap context.
+- If asked for a list, give at most 6 bullets.
 
 {roadmap_hint}
 
@@ -89,7 +92,7 @@ Context:
 Question:
 {question}
 
-Answer:
+Answer (concise bullets only):
 """
 
     response = client.models.generate_content(
